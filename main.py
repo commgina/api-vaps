@@ -24,6 +24,9 @@ def buscar_por_cwe_endpoint(cwe_id: str):
 def buscar_core(wp_version: str):
     
     agrupadas, sin_mapeo = wpquery.buscar_vulnerabilidades(core_version=wp_version, version_objetivo=wp_version)
+    if not agrupadas:
+        raise HTTPException(status_code=404, detail="No se encontraron vulnerabilidades")
+    
     resultados = []
 
     for cwe_id, cve_list in agrupadas.items():
@@ -47,6 +50,10 @@ def buscar_core(wp_version: str):
 @app.get("/plugins/{plugin_slug}/{plugin_version}")
 def buscar_plugin(plugin_slug: str, plugin_version: str = None):
     agrupadas, sin_mapeo = wpquery.buscar_vulnerabilidades(plugin_slug=plugin_slug, version_objetivo=plugin_version)
+
+    if not agrupadas:
+        raise HTTPException(status_code=404, detail="No se encontraron vulnerabilidades")
+
     resultados = []
 
     for cwe_id, cve_list in agrupadas.items():
@@ -71,6 +78,9 @@ def buscar_plugin(plugin_slug: str, plugin_version: str = None):
 @app.get("/themes/{theme_slug}/{theme_version}")
 def buscar_theme(theme_slug: str, theme_version: str = None):
     agrupadas, sin_mapeo = wpquery.buscar_vulnerabilidades(theme_slug=theme_slug, version_objetivo=theme_version)
+
+    if not agrupadas:
+        raise HTTPException(status_code=404, detail="No se encontraron vulnerabilidades")
     resultados = []
 
     for cwe_id, cve_list in agrupadas.items():

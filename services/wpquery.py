@@ -22,6 +22,9 @@ def buscar_vulnerabilidades(plugin_slug=None, theme_slug=None, core_version=None
 
     data = respuesta.json()
     vulnerabilidades = data.get("data", {}).get("vulnerability", [])
+    
+    if not isinstance(vulnerabilidades, list):
+        return None,None
 
     agrupadas_por_cwe = {}  # clave: cwe principal, valor: lista de tuplas (cve, cwe original)
     cwes_no_mapeados = []  # Lista de tuplas (cve, cwe sin mapear)
